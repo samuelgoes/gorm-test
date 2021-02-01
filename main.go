@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -39,7 +39,7 @@ type Car struct {
 
 // BeforeCreate will set a UUID rather than numeric ID.
 func (s *Samuel) BeforeCreate(tx *gorm.DB) (err error) {
-	s.UUID = uuid.NewV4()
+	s.UUID = uuid.New()
 
 	if s.Name == "Hulio" {
 		return errors.New("invalid role")
