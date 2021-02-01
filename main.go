@@ -26,24 +26,22 @@ type Product struct {
 }
 
 type Samuel struct {
-	//UUID uuid.UUID `gorm:"default:uuid_generate_v4()`
-	ID   string
+	UUID uuid.UUID `gorm:"primaryKey"`
 	Name string
-	Cars []Car
+	Cars []Car `gorm:"foreignKey:SamuelUUID"`
 }
 
 type Car struct {
 	gorm.Model
-	Plate    string
-	SamuelID *string
+	Plate      string
+	SamuelUUID *uuid.UUID
 }
 
 // BeforeCreate will set a UUID rather than numeric ID.
 func (s *Samuel) BeforeCreate(tx *gorm.DB) (err error) {
-	id := uuid.NewV4()
-	s.ID = id.String()
+	s.UUID = uuid.NewV4()
 
-	if s.Name == "ramon" {
+	if s.Name == "Hulio" {
 		return errors.New("invalid role")
 	}
 
@@ -79,24 +77,28 @@ func main() {
 	db.Delete(&product, 1)
 
 	db.Create(&User{
-		Name:       "jinzhu",
+		Name:       "User1",
 		CreditCard: CreditCard{Number: "411111111111"},
 	})
 
 	db.Create(&Samuel{
-		Name: "samueluco",
+		Name: "User2",
 		Cars: nil,
 	})
 
 	Car1 := Car{
-		Plate: "CagateLorito1",
+		Plate: "Car1",
 	}
 	Car2 := Car{
-		Plate: "CagateLorito2",
+		Plate: "Car2",
 	}
 
 	db.Create(&Samuel{
-		Name: "samueluquiño",
+		Name: "User3",
 		Cars: []Car{Car1, Car2},
+	})
+
+	db.Create(&Car{
+		Plate: "No Plate",
 	})
 }
